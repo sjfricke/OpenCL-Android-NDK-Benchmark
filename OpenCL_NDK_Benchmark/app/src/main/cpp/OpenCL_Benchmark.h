@@ -2,6 +2,7 @@
 #define OPENCL_NDK_BENCHMARK_OPENCL_BENCHMARK_H
 
 #include <android/log.h>
+#include <android/native_window.h>
 #include <jni.h>
 
 #include <cstdlib>
@@ -20,14 +21,10 @@
 
 class OpenCL_Benchmark {
 public:
-
-  OpenCL_Benchmark() {}
-
+  OpenCL_Benchmark();
+  ~OpenCL_Benchmark();
   OpenCL_Benchmark(const OpenCL_Benchmark& other) = delete;
-
   OpenCL_Benchmark& operator=(const OpenCL_Benchmark& other) = delete;
-
-  ~OpenCL_Benchmark() {}
 
   // Lets us know when app has started passing in VM info
   void OnCreate(JNIEnv* env, jobject caller_activity);
@@ -39,16 +36,21 @@ public:
   void OnDestroy();
 
   // Cache the Java VM used from the Java layer.
-  void SetJavaVM(JavaVM* java_vm) { java_vm_ = java_vm; }
+  void SetJavaVM(JavaVM* java_vm) { m_java_vm = java_vm; }
+
+  // sets Surface buffer reference pointer
+  void SetNativeWindow(ANativeWindow* nativeWindow) { m_native_window = nativeWindow; }
 
   double runOpenCL();
 
 private:
 
   // Cached Java VM, caller activity object
-  JavaVM* java_vm_;
-  jobject calling_activity_obj_;
-  jmethodID on_demand_method_;
+  JavaVM* m_java_vm;
+  jobject m_calling_activity_obj;
+  jmethodID m_demand_method;
+
+  ANativeWindow* m_native_window;
 
   // Compute c = a + b.
   const char *kernel_source =

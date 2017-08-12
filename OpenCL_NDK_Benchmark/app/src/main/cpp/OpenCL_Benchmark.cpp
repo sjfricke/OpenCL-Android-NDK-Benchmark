@@ -1,5 +1,18 @@
 #include "OpenCL_Benchmark.h"
 
+OpenCL_Benchmark::OpenCL_Benchmark() {
+
+};
+
+OpenCL_Benchmark::~OpenCL_Benchmark() {
+  // make sure we don't leak native windows
+  if (m_native_window != NULL) {
+    ANativeWindow_release(m_native_window);
+    m_native_window = NULL;
+    LOGI("Destroyed Native Window");
+  }
+}
+
 void OpenCL_Benchmark::OnCreate(JNIEnv* env, jobject caller_activity)
 {
 

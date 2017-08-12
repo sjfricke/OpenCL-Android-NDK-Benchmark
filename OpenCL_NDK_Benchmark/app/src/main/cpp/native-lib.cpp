@@ -1,4 +1,6 @@
 #include <jni.h>
+#include <android/native_window_jni.h>
+
 #include <string>
 
 #include "OpenCL_Benchmark.h"
@@ -23,6 +25,14 @@ Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_stringFromJNI(
   snprintf(return_string, sizeof(return_string), "Time: %f seconds", result);
   return env->NewStringUTF(return_string);
 }
+
+// set the surface
+void Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_setSurface(JNIEnv *env, jclass clazz, jobject surface)
+{
+  // obtain a native window from a Java surface
+  app.SetNativeWindow( ANativeWindow_fromSurface(env, surface) );
+}
+
 
 #ifdef __cplusplus
 }
