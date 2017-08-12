@@ -21,50 +21,67 @@
 
 class OpenCL_Benchmark {
 public:
-  OpenCL_Benchmark();
-  ~OpenCL_Benchmark();
-  OpenCL_Benchmark(const OpenCL_Benchmark& other) = delete;
-  OpenCL_Benchmark& operator=(const OpenCL_Benchmark& other) = delete;
+    OpenCL_Benchmark();
+    ~OpenCL_Benchmark();
+    OpenCL_Benchmark(const OpenCL_Benchmark& other) = delete;
+    OpenCL_Benchmark& operator=(const OpenCL_Benchmark& other) = delete;
 
-  // Lets us know when app has started passing in VM info
-  void OnCreate(JNIEnv* env, jobject caller_activity);
+    // Lets us know when app has started passing in VM info
+    void OnCreate(JNIEnv* env, jobject caller_activity);
 
-  // Disconnect from service
-  void OnPause();
+    // Disconnect from service
+    void OnPause();
 
-  // Cleanup
-  void OnDestroy();
+    // Cleanup
+    void OnDestroy();
 
-  // Cache the Java VM used from the Java layer.
-  void SetJavaVM(JavaVM* java_vm) { m_java_vm = java_vm; }
+    // Cache the Java VM used from the Java layer.
+    void SetJavaVM(JavaVM* java_vm) { m_java_vm = java_vm; }
 
-  // sets Surface buffer reference pointer
-  void SetNativeWindow(ANativeWindow* nativeWindow) { m_native_window = nativeWindow; }
+    // sets Surface buffer reference pointer
+    void SetNativeWindow(ANativeWindow* nativeWindow);
 
-  double runOpenCL();
+    double runOpenCL();
 
 private:
 
-  // Cached Java VM, caller activity object
-  JavaVM* m_java_vm;
-  jobject m_calling_activity_obj;
-  jmethodID m_demand_method;
+    typedef struct {
+        unsigned char red;
+        unsigned char green;
+        unsigned char blue;
+        unsigned char alpha;
+    } pixel;
 
-  ANativeWindow* m_native_window;
+    // Cached Java VM, caller activity object
+    JavaVM* m_java_vm;
+    jobject m_calling_activity_obj;
+    jmethodID m_demand_method;
 
-  // Compute c = a + b.
-  const char *kernel_source =
-      "#pragma OPENCL EXTENSION cl_khr_fp64 : enable\n"
-          "__kernel void vecAdd(  __global double *a,\n"
-          "                       __global double *b,\n"
-          "                       __global double *c,\n"
-          "                       const unsigned int n)\n"
-          "{\n"
-          "    int id = get_global_id(0);\n"
-          "    if (id < n) {\n"
-          "        c[id] = a[id] + b[id];\n"
-          "    }\n"
-          "}\n";
+    // holds native window to write buffer too
+    ANativeWindow* m_native_window;
+
+    // buffer to hold native window when writing to it
+    ANativeWindow_Buffer m_native_buffer;
+
+    // the buffer we will write to send to native window
+    pixel* m_frame_buffer;
+    int32_t m_frame_height;
+    int32_t m_frame_width;
+    int32_t m_frame_stride;
+
+    // Compute c = a + b.
+    const char *kernel_source =
+        "#pragma OPENCL EXTENSION cl_khr_fp64 : enable\n"
+        "__kernel void vecAdd(  __global double *a,\n"
+        "                       __global double *b,\n"
+        "                       __global double *c,\n"
+        "                       const unsigned int n)\n"
+        "{\n"
+        "    int id = get_global_id(0);\n"
+        "    if (id < n) {\n"
+        "        c[id] = a[id] + b[id];\n"
+        "    }\n"
+        "}\n";
 };
 
 #endif //OPENCL_NDK_BENCHMARK_OPENCL_BENCHMARK_H
