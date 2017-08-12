@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include <CL/opencl.h>
+
 // used to get logcat outputs which can be regex filtered by the LOG_TAG we give
 // So in Logcat you can filter this example by putting OpenCL_Benchmark
 #define LOG_TAG "OpenCL_Benchmark"
@@ -39,6 +41,8 @@ public:
   // Cache the Java VM used from the Java layer.
   void SetJavaVM(JavaVM* java_vm) { java_vm_ = java_vm; }
 
+  double runOpenCL();
+
 private:
 
   // Cached Java VM, caller activity object
@@ -46,6 +50,19 @@ private:
   jobject calling_activity_obj_;
   jmethodID on_demand_method_;
 
+  // Compute c = a + b.
+  const char *kernel_source =
+      "#pragma OPENCL EXTENSION cl_khr_fp64 : enable\n"
+          "__kernel void vecAdd(  __global double *a,\n"
+          "                       __global double *b,\n"
+          "                       __global double *c,\n"
+          "                       const unsigned int n)\n"
+          "{\n"
+          "    int id = get_global_id(0);\n"
+          "    if (id < n) {\n"
+          "        c[id] = a[id] + b[id];\n"
+          "    }\n"
+          "}\n";
 };
 
 #endif //OPENCL_NDK_BENCHMARK_OPENCL_BENCHMARK_H

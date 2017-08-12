@@ -18,8 +18,10 @@ jint JNI_OnLoad(JavaVM* vm, void*) {
 JNIEXPORT jstring JNICALL
 Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_stringFromJNI(
     JNIEnv *env,  jobject) {
-  std::string hello = "OpenCL NDK Bencmark";
-  return env->NewStringUTF(hello.c_str());
+  double result = app.runOpenCL();
+  char return_string[100];
+  snprintf(return_string, sizeof(return_string), "Time: %f seconds", result);
+  return env->NewStringUTF(return_string);
 }
 
 #ifdef __cplusplus
