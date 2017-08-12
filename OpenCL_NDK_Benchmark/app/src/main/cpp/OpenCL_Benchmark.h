@@ -12,6 +12,7 @@
 #include <vector>
 
 #include <CL/opencl.h>
+#include <png.h>
 
 // used to get logcat outputs which can be regex filtered by the LOG_TAG we give
 // So in Logcat you can filter this example by putting OpenCL_Benchmark
@@ -39,7 +40,9 @@ public:
     void SetJavaVM(JavaVM* java_vm) { m_java_vm = java_vm; }
 
     // sets Surface buffer reference pointer
-    void SetNativeWindow(ANativeWindow* nativeWindow);
+    void SetNativeWindow(ANativeWindow* native_indow);
+
+    void LoadPng(char* file_path);
 
     double runOpenCL();
 

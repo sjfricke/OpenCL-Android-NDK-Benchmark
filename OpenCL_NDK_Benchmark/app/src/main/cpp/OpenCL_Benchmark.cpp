@@ -32,10 +32,10 @@ void OpenCL_Benchmark::OnDestroy()
 
 }
 
-void OpenCL_Benchmark::SetNativeWindow(ANativeWindow* nativeWindow)
+void OpenCL_Benchmark::SetNativeWindow(ANativeWindow* native_window)
 {
     // Save native window
-    m_native_window = nativeWindow;
+    m_native_window = native_window;
 
     // Here we set the buffer to use RGBA_8888 as default might be; RGB_565
     if (ANativeWindow_lock(m_native_window, &m_native_buffer, NULL) == 0) {
@@ -52,6 +52,12 @@ void OpenCL_Benchmark::SetNativeWindow(ANativeWindow* nativeWindow)
 
         ANativeWindow_unlockAndPost(m_native_window);
     }
+}
+
+void OpenCL_Benchmark::LoadPng(char* file_path)
+{
+    png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    png_infop info_ptr = png_create_info_struct(png_ptr);
 }
 
 double OpenCL_Benchmark::runOpenCL()

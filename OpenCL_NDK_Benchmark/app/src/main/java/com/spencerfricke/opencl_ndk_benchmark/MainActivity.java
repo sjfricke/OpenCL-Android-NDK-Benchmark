@@ -59,12 +59,12 @@ public class MainActivity extends Activity {
         public void onClick(View view) {
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.result_text);
-        tv.setText(stringFromJNI());
+        tv.setText(startTest());
         }
     };
 
 
-    public native String stringFromJNI();
+    public native String startTest();
 
     // Sends surface buffer to NDK
     public native void setSurface(Surface surface);
