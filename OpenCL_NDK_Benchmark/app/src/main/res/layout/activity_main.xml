@@ -41,13 +41,13 @@
                 android:id="@+id/result_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Results:"
+                android:text=""
                 android:textColor="?android:attr/textColorLink"/>
         </LinearLayout>
     </LinearLayout>
 
     <Button
-        android:id="@+id/top_down_button"
+        android:id="@+id/start_test"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

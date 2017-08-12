@@ -7,6 +7,9 @@
 
 static OpenCL_Benchmark app;
 
+clock_t start_t, end_t;
+double  total_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -20,9 +23,15 @@ jint JNI_OnLoad(JavaVM* vm, void*) {
 JNIEXPORT jstring JNICALL
 Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_stringFromJNI(
     JNIEnv *env,  jobject) {
+
+  start_t = clock();
   double result = app.runOpenCL();
+  end_t = clock();
+
+  total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
+
   char return_string[100];
-  snprintf(return_string, sizeof(return_string), "Time: %f seconds", result);
+  snprintf(return_string, sizeof(return_string), "Results: %f seconds", total_t);
   return env->NewStringUTF(return_string);
 }
 

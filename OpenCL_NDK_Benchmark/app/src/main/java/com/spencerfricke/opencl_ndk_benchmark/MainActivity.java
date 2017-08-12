@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -17,6 +19,7 @@ public class MainActivity extends Activity {
         System.loadLibrary("opencl_benchmark");
     }
 
+    Button mStartTestButton;
     SurfaceView mSurfaceView;
     SurfaceHolder mSurfaceHolder;
 
@@ -28,6 +31,9 @@ public class MainActivity extends Activity {
         // set up the Surface to display images too
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         mSurfaceHolder = mSurfaceView.getHolder();
+
+        mStartTestButton = (Button)findViewById(R.id.start_test);
+        mStartTestButton.setOnClickListener(startTestListener);
 
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
@@ -46,11 +52,17 @@ public class MainActivity extends Activity {
             }
 
         });
+    }
 
+    private View.OnClickListener startTestListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
         // Example of a call to a native method
         TextView tv = (TextView) findViewById(R.id.result_text);
         tv.setText(stringFromJNI());
-    }
+        }
+    };
+
 
     public native String stringFromJNI();
 
