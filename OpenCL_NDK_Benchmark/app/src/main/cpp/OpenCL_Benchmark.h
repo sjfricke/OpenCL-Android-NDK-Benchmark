@@ -38,7 +38,7 @@ public:
     void OnDestroy();
 
     // Cache the Java VM used from the Java layer.
-    void SetJavaVM(JavaVM* java_vm) { m_java_vm = java_vm; }
+    void SetJavaVM(JavaVM* pjava_vm) { java_vm = pjava_vm; }
 
     // sets Surface buffer reference pointer
     void SetNativeWindow(ANativeWindow* native_indow);
@@ -48,7 +48,11 @@ public:
 
     void LoadPng(char* file_path);
 
-    double RunOpenCL();
+    // takes two vectors and adds them together
+    double Vector_Add(void);
+
+    // takes png and runs a gaussian blur and displays it to the screen
+    double Gaussian_Blur(void);
 
 private:
 
@@ -60,9 +64,9 @@ private:
     } pixel;
 
     // Cached Java VM, caller activity object
-    JavaVM* m_java_vm;
-    jobject m_calling_activity_obj;
-    jmethodID m_demand_method;
+    JavaVM* java_vm;
+    jobject calling_activity_obj;
+    jmethodID on_png_loaded;
 
     // holds native window to write buffer too
     ANativeWindow* m_native_window;

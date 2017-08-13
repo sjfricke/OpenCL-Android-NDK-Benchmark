@@ -2,6 +2,7 @@ package com.spencerfricke.opencl_ndk_benchmark;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
@@ -12,6 +13,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
+
+    // Number of test to load used to trigger when all done
+
+    static int testToLoad = 1;
 
     static final String TAG = "OpenCL_Benchmark";
 
@@ -29,7 +34,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        onCreateJNI(getAssets());
+        // send class activity and assest fd to native code
+        onCreateJNI(this, getAssets());
 
         // set up the Surface to display images too
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
@@ -41,8 +47,7 @@ public class MainActivity extends Activity {
         mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                Log.v(TAG, "surfaceChanged format=" + format + ", width=" + width + ", height="
-                        + height);
+                Log.v(TAG, "surfaceChanged format="+format+", width="+width+", height="+ height);
             }
 
             public void surfaceCreated(SurfaceHolder holder) {
@@ -57,6 +62,23 @@ public class MainActivity extends Activity {
         });
     }
 
+    // async from JNI when png is loaded and turns text green
+    public void loadedPng() {
+        ((TextView)findViewById(R.id.loading_png)).setTextColor(Color.GREEN);
+        testToLoad--;
+        if (testToLoad == 0) { loadingComplete(); }
+    }
+
+    // when all test are ready make button visable
+    private void loadingComplete() {
+        Log.v(TAG, "Load complete!");
+        mStartTestButton.setVisibility(View.VISIBLE);
+
+        // clear loading text
+        ((TextView)findViewById(R.id.loading_header)).setVisibility(View.INVISIBLE);
+        ((TextView)findViewById(R.id.loading_png)).setVisibility(View.INVISIBLE);
+    }
+
     private View.OnClickListener startTestListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -66,7 +88,7 @@ public class MainActivity extends Activity {
         }
     };
 
-    public native void onCreateJNI(AssetManager assetManager);
+    public native void onCreateJNI(Activity callerActivity, AssetManager assetManager);
 
     public native String startTest();
 

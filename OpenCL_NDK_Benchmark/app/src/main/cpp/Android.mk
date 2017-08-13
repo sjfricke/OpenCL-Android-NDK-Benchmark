@@ -11,7 +11,10 @@ LOCAL_C_INCLUDES := $(LIBS_PATH)/CL/opencl12
 LOCAL_C_INCLUDES += $(LIBS_PATH)/libpng/include/
 
 LOCAL_SRC_FILES  := native-lib.cpp \
-                    OpenCL_Benchmark.cpp
+                    OpenCL_Benchmark.cpp \
+                    Vector_Add.cpp \
+                    Gaussian_Blur.cpp
+
 LOCAL_LDLIBS     := -llog -landroid $(LIBS_PATH)/libOpenCL.so
 include $(BUILD_SHARED_LIBRARY)
 

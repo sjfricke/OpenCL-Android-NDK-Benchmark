@@ -8,9 +8,6 @@
 
 static OpenCL_Benchmark app;
 
-clock_t start_t, end_t;
-double  total_t;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,7 +19,8 @@ jint JNI_OnLoad(JavaVM* vm, void*) {
 }
 JNIEXPORT void JNICALL
 Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_onCreateJNI(
-        JNIEnv *env, jobject clazz, jobject j_asset_manager) {
+        JNIEnv *env, jobject clazz, jobject activity, jobject j_asset_manager) {
+    app.OnCreate(env, activity);
     app.SetAssetManager(AAssetManager_fromJava(env, j_asset_manager));
 }
 
@@ -30,26 +28,30 @@ JNIEXPORT jstring JNICALL
 Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_startTest(
         JNIEnv *env, jobject clazz) {
 
-    // for now only reading in one file
-    char image_name [] = "fish.png";
-    app.LoadPng(image_name);
+    double time_Vector_Add, time_Gaussian_Blur;
 
-    start_t = clock();
-    double result = app.RunOpenCL();
-    end_t = clock();
+    // Run the test
+    time_Vector_Add = app.Vector_Add();
+    time_Gaussian_Blur = app.Gaussian_Blur();
 
-    total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
-
-    char return_string[100];
-    snprintf(return_string, sizeof(return_string), "Results: %f seconds", total_t);
+    char return_string[512];
+    snprintf(return_string, sizeof(return_string),
+             "Vector Add: %f seconds\n "
+             "Gaussian Blur: %f seconds\n",
+             time_Vector_Add, time_Gaussian_Blur);
     return env->NewStringUTF(return_string);
 }
 
-// set the surface
+// Alot of stuff depends on the m_frame_buffer being loaded
+// this is done in SetNativeWindow
 void Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_setSurface(JNIEnv *env, jclass clazz, jobject surface)
 {
     // obtain a native window from a Java surface
     app.SetNativeWindow( ANativeWindow_fromSurface(env, surface) );
+
+    // for now only reading in one file
+    char image_name [] = "fish.png";
+    app.LoadPng(image_name);
 }
 
 

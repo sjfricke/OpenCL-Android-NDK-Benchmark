@@ -45,6 +45,36 @@
                 android:textColor="?android:attr/textColorLink"/>
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="30dp" >
+
+        <TextView
+            android:id="@+id/loading_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Loading Up Benchmark, Please Wait!"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@android:color/background_light"
+            android:textStyle="bold"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/loading_png"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Loading in png to buffer..."
+            android:textAlignment="center"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="visible"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/start_test"
@@ -54,7 +84,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
         android:paddingRight="5dp"
-        android:text="Start Test" />
+        android:text="Start Test"
+        android:visibility="invisible"/>
 
 
 </RelativeLayout>
