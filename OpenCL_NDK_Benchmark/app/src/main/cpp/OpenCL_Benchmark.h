@@ -3,6 +3,7 @@
 
 #include <android/log.h>
 #include <android/native_window.h>
+#include <android/asset_manager.h>
 #include <jni.h>
 
 #include <cstdlib>
@@ -42,9 +43,12 @@ public:
     // sets Surface buffer reference pointer
     void SetNativeWindow(ANativeWindow* native_indow);
 
+    // sets Surface buffer reference pointer
+    void SetAssetManager(AAssetManager* asset_manager) { m_aasset_manager = asset_manager; };
+
     void LoadPng(char* file_path);
 
-    double runOpenCL();
+    double RunOpenCL();
 
 private:
 
@@ -71,6 +75,9 @@ private:
     int32_t m_frame_height;
     int32_t m_frame_width;
     int32_t m_frame_stride;
+
+    // used to hold reference to assets in assets folder
+    AAssetManager* m_aasset_manager;
 
     // Compute c = a + b.
     const char *kernel_source =

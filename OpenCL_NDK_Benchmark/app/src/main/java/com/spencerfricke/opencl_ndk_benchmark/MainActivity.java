@@ -1,6 +1,7 @@
 package com.spencerfricke.opencl_ndk_benchmark;
 
 import android.app.Activity;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
@@ -27,6 +28,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        onCreateJNI(getAssets());
 
         // set up the Surface to display images too
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
@@ -63,6 +66,7 @@ public class MainActivity extends Activity {
         }
     };
 
+    public native void onCreateJNI(AssetManager assetManager);
 
     public native String startTest();
 

@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <android/native_window_jni.h>
+#include <android/asset_manager_jni.h>
 
 #include <string>
 
@@ -19,16 +20,22 @@ jint JNI_OnLoad(JavaVM* vm, void*) {
     app.SetJavaVM(vm);
     return JNI_VERSION_1_6;
 }
+JNIEXPORT void JNICALL
+Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_onCreateJNI(
+        JNIEnv *env, jobject clazz, jobject j_asset_manager) {
+    app.SetAssetManager(AAssetManager_fromJava(env, j_asset_manager));
+}
 
 JNIEXPORT jstring JNICALL
-Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_startTest(JNIEnv *env,  jobject) {
+Java_com_spencerfricke_opencl_1ndk_1benchmark_MainActivity_startTest(
+        JNIEnv *env, jobject clazz) {
 
-    char test
-    [] = "test";
-    app.LoadPng(test);
+    // for now only reading in one file
+    char image_name [] = "fish.png";
+    app.LoadPng(image_name);
 
     start_t = clock();
-    double result = app.runOpenCL();
+    double result = app.RunOpenCL();
     end_t = clock();
 
     total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
